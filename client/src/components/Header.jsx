@@ -57,7 +57,7 @@ const Header = () => {
     // },[cartItem])
 
   return (
-    <header className='h-24 lg:h-20 lg:shadow-md sticky top-0 z-40 flex flex-col justify-center gap-1 bg-green'>
+    <header className='h-24 lg:h-20 lg:shadow-md sticky top-0 z-40 flex flex-col justify-center gap-1 bg-white'>
         {
             !(isSearchPage && isMobile) && (
                 <div className='container mx-auto flex items-center px-2 justify-between'>
@@ -125,7 +125,7 @@ const Header = () => {
                                                 <button onClick={redirectToLoginPage} className='text-lg px-2'>Login</button>
                                             )
                                         }
-                                        <button onClick={()=>setOpenCartSection(true)} className='flex items-center gap-2 bg--800 hover:bg-white-700 px-3 py-2 rounded text-white'>
+                                        <button onClick={()=>setOpenCartSection(true)} className='flex items-center gap-2 bg--800 hover:bg-green-700 px-3 py-2 rounded text-white'>
                                             {/**add to card icons */}
                                             <div className='animate-bounce'>
                                                 <BsCart4 size={26}/>
