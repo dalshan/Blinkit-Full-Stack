@@ -38,6 +38,10 @@ const orderSchema = new mongoose.Schema({
         type : Number,
         default : 0
     },
+    totalQuantity: { // New field added to track total quantity
+        type: Number,
+        default: 0,
+    },
     invoice_receipt : {
         type : String,
         default : ""
@@ -45,7 +49,15 @@ const orderSchema = new mongoose.Schema({
 },{
     timestamps : true
 })
-
+// Before saving the order, calculate the total quantity
+orderSchema.pre('save', function (next) {
+    if (this.product_details && Array.isArray(this.product_details)) {
+        // Sum up the quantity of each product in the order
+        const totalQuantity = this.product_details.reduce((sum, product) => sum + (product.quantity || 0), 0);
+        this.totalQuantity = totalQuantity;
+    }
+    next();
+});
 const OrderModel = mongoose.model('order',orderSchema)
 
 export default OrderModel
