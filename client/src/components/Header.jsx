@@ -125,7 +125,7 @@ const Header = () => {
                                                 <button onClick={redirectToLoginPage} className='text-lg px-2'>Login</button>
                                             )
                                         }
-                                        <button onClick={()=>setOpenCartSection(true)} className='flex items-center gap-2 bg--800 hover:bg-green-700 px-3 py-2 rounded text-white'>
+                                        <button onClick={()=>setOpenCartSection(true)} className='flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-2 rounded text-white'>
                                             {/**add to card icons */}
                                             <div className='animate-bounce'>
                                                 <BsCart4 size={26}/>
