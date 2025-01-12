@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaRegEyeSlash } from "react-icons/fa6";
 import { FaRegEye } from "react-icons/fa6";
 import toast from 'react-hot-toast';
@@ -19,25 +19,30 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setData((prevData) => ({
-            ...prevData,
-            [name]: value,
+
+        setData((prev) => ({
+            ...prev,
+            [name]: value
         }));
     };
 
+    // Validate if all values are filled in
     const valideValue = Object.values(data).every(el => el);
 
+    // Handle form submission
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevents page refresh
 
         try {
             const response = await Axios({
                 ...SummaryApi.login,
-                data: data,
+                data: data
             });
 
+            // Handle server response
             if (response.data.error) {
                 toast.error(response.data.message);
             }
@@ -54,45 +59,65 @@ const Login = () => {
                     email: "",
                     password: "",
                 });
-                navigate("/");
+                navigate("/");  // Redirect to home page after successful login
             }
 
         } catch (error) {
-            AxiosToastError(error);
+            AxiosToastError(error); // Handle Axios errors
         }
     };
-
-    // Check for existing tokens on page load
-    useEffect(() => {
-        const accessToken = localStorage.getItem('accesstoken');
-        if (accessToken) {
-            // User already logged in (tokens exist)
-            fetchUserDetails(accessToken)
-                .then(response => {
-                    dispatch(setUserDetails(response.data));
-                    navigate('/'); // Redirect to homepage
-                })
-                .catch(error => {
-                    // Handle errors (e.g., invalid token)
-                    console.error('Error fetching user details:', error);
-                    // Optionally clear tokens and redirect to login
-                    localStorage.removeItem('accesstoken');
-                    localStorage.removeItem('refreshToken'); 
-                });
-        }
-    }, [dispatch, navigate]);
 
     return (
         <section className='w-full container mx-auto px-2'>
             <div className='bg-white my-4 w-full max-w-lg mx-auto rounded p-7'>
+
                 <form className='grid gap-4 py-4' onSubmit={handleSubmit}>
-                    {/* ... rest of the form */}
+                    <div className='grid gap-1'>
+                        <label htmlFor='email'>Email :</label>
+                        <input
+                            type='email'
+                            id='email'
+                            className='bg-blue-50 p-2 border rounded outline-none focus:border-primary-200'
+                            name='email'
+                            value={data.email}
+                            onChange={handleChange}
+                            placeholder='Enter your email'
+                        />
+                    </div>
+                    <div className='grid gap-1'>
+                        <label htmlFor='password'>Password :</label>
+                        <div className='bg-blue-50 p-2 border rounded flex items-center focus-within:border-primary-200'>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id='password'
+                                className='w-full outline-none'
+                                name='password'
+                                value={data.password}
+                                onChange={handleChange}
+                                placeholder='Enter your password'
+                            />
+                            <div onClick={() => setShowPassword(prev => !prev)} className='cursor-pointer'>
+                                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                            </div>
+                        </div>
+                        <Link to={"/forgot-password"} className='block ml-auto hover:text-primary-200'>Forgot password ?</Link>
+                    </div>
+
+                    <button 
+                        disabled={!valideValue} 
+                        className={` ${valideValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500"} text-white py-2 rounded font-semibold my-3 tracking-wide`}>
+                        Login
+                    </button>
+
                 </form>
-                {/* ... rest of the component */}
+
+                <p>
+                    Don't have an account? <Link to={"/register"} className='font-semibold text-green-700 hover:text-green-800'>Register</Link>
+                </p>
             </div>
         </section>
     );
-};
+}
 
 export default Login;
 
